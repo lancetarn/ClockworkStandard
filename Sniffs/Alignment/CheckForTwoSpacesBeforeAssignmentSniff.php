@@ -42,7 +42,7 @@ class ClockworkStandard_Sniffs_Alignment_CheckForTwoSpacesBeforeAssignmentSniff 
         $surrounding  =  array( );
 
         $surrounding['before']  =  $tokens[$stackPtr - 1];
-        $surrounding['after']   =  $tok)}s[$stackPtr + 1];
+        $surrounding['after']   =  $tokens[$stackPtr + 1];
 
         foreach( $surrounding as $key => $token ) {
 
