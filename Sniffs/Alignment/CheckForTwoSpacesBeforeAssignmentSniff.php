@@ -7,14 +7,14 @@
  * @author Lance Erickson <lance@clockwork.net>
  **/
 
-class ClockworkStandard_Sniffs_Alignment_CheckForTwoSpacesBeforeAssignmentSniff implements PHP_CodeSniffer_Sniff{
+class Clockwork_Sniffs_Alignment_CheckForTwoSpacesBeforeAssignmentSniff implements PHP_CodeSniffer_Sniff{
 
     /** 
      * Looking for two or more spaces, no tabs.
      **/
     public $whitespace_regex  =  array(
-        "before" => "/^\s\s+/",
-        "after"  => "/^\s\s/",
+        "before" => "/^  +$/",
+        "after"  => "/^  $/",
     );
 
     public $warning_message  =  "Improper whitespace %s '%s' assignment.";
@@ -42,19 +42,13 @@ class ClockworkStandard_Sniffs_Alignment_CheckForTwoSpacesBeforeAssignmentSniff 
         $surrounding  =  array( );
 
         $surrounding['before']  =  $tokens[$stackPtr - 1];
-        $surrounding['after']   =  $tok)}s[$stackPtr + 1];
+        $surrounding['after']   =  $tokens[$stackPtr + 1];
 
         foreach( $surrounding as $key => $token ) {
 
-            $clean  =  true;
-
-            if ( $token['type'] !== 'T_WHITESPACE' ) {
-                $clean  =  false;
-            }
-
             $match  =  preg_match( $this->whitespace_regex[$key], $token['content'] );
         
-            if ( ! $clean || ! $match ) {
+            if ( ! $match ) {
                 $data  =  array( $key, $tokens[$stackPtr]['content'] );
                 $phpcsFile->addWarning( $this->warning_message, $stackPtr, '', $data );
             }
