@@ -1,0 +1,4 @@
+sniffs
+======
+
+Some CodeSniffer sniffs
