@@ -13,13 +13,12 @@ class Clockwork_Sniffs_Alignment_CheckForTwoSpacesBeforeAssignmentSniff implemen
      * Looking for two or more spaces, no tabs.
      **/
     public $whitespace_regex  =  array(
-        "before" => "/^  +$/",
-        "after"  => "/^  $/",
+        "before"  =>  "/^  +$/",
+        "after"   =>  "/^  $/",
     );
 
-    public $warning_message  =  "Improper whitespace %s '%s' assignment.";
+    public $error_message  =  "Improper whitespace %s '%s' assignment.";
 
-    public $token_stack;
 
     /**
      * Returns token types to sniff.
@@ -39,18 +38,18 @@ class Clockwork_Sniffs_Alignment_CheckForTwoSpacesBeforeAssignmentSniff implemen
 
         $tokens  =  $phpcsFile->getTokens( );
 
-        $surrounding  =  array( );
+        $surrounding   =  array( );
 
         $surrounding['before']  =  $tokens[$stackPtr - 1];
         $surrounding['after']   =  $tokens[$stackPtr + 1];
 
-        foreach( $surrounding as $key => $token ) {
+        foreach( $surrounding as $key  =>  $token ) {
 
             $match  =  preg_match( $this->whitespace_regex[$key], $token['content'] );
-        
+
             if ( ! $match ) {
                 $data  =  array( $key, $tokens[$stackPtr]['content'] );
-                $phpcsFile->addWarning( $this->warning_message, $stackPtr, '', $data );
+                $phpcsFile->addError( $this->error_message, $stackPtr, '', $data );
             }
         }
     }
