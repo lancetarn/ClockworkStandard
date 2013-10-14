@@ -15,6 +15,10 @@ class Clockwork_Sniffs_TwoLinesBetweenFunctionsSniff implements PHP_CodeSniffer_
     }
 
 
+    /**
+     * Checks for two lines either before function or before
+     * a function's comment.
+     **/
     public function process ( PHP_CodeSniffer_File $phpcsFile, $stackPtr ) {
 
         $clean  =  true;
@@ -31,6 +35,22 @@ class Clockwork_Sniffs_TwoLinesBetweenFunctionsSniff implements PHP_CodeSniffer_
         }
 
         // Do we have a comment? 
+        $comment_index  =  $phpcsFile->findPrevious( T_DOC_COMMENT, $stackPtr );
+
+        if ( $comment_index ) {
+            // Does it end right above us?
+            if ( $tokens[$comment_index]['line'] == $current_line - 1 ) {
+                // Where does it begin?
+                $comment_opener  =  $comment_index;
+                $type  =  'T_DOC_COMMENT';
+                while ( $type == 'T_DOC_COMMENT' ) {
+                    $comment_opener--;
+                    $type  =  $tokens[$comment_opener]['type'];
+                }
+                // We'll check from the first comment line. 
+                $current_line  =  $tokens[$comment_opener + 1]['line'];
+            }
+        }
 
         // Are the previous two lines empty?
         $lines  =  range( $current_line - 2, $current_line - 1 );

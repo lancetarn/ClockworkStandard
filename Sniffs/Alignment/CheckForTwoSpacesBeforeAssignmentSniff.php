@@ -31,19 +31,29 @@ class Clockwork_Sniffs_Alignment_CheckForTwoSpacesBeforeAssignmentSniff implemen
 
 
     /**
-     * Examines surrounding tokens for matching whitespace. Warn if
+     * Examines surrounding tokens for matching whitespace. Error if
      * less than two spaces are found.
      **/
     public function process( PHP_CodeSniffer_File $phpcsFile, $stackPtr ) {
 
         $tokens  =  $phpcsFile->getTokens( );
 
+        // Ignore assignments used in a condition, like an IF or FOR.
+        // Lifted from Generic standard - MultipleStatementAlignment.
+        if ( isset( $tokens[$stackPtr]['nested_parenthesis'] ) === true) {
+            foreach ( $tokens[$stackPtr]['nested_parenthesis'] as $start => $end) {
+                if ( isset( $tokens[$start]['parenthesis_owner'] ) === true) {
+                    return;
+                }
+            }
+        }
+
         $surrounding   =  array( );
 
         $surrounding['before']  =  $tokens[$stackPtr - 1];
         $surrounding['after']   =  $tokens[$stackPtr + 1];
 
-        foreach( $surrounding as $key  =>  $token ) {
+        foreach( $surrounding as $key => $token ) {
 
             $match  =  preg_match( $this->whitespace_regex[$key], $token['content'] );
 
