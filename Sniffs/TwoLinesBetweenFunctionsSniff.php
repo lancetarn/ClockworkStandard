@@ -1,6 +1,6 @@
 <?php
 /**
- * This sniff ensures a minimum of two spaces lines between function calls.
+ * This sniff ensures a minimum of two lines between function calls.
  *
  * @category PHP
  * @package PHP_CodeSniffer
